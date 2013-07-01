@@ -6,9 +6,8 @@ Scripts used to create docker-AMI images
 Using
 -----
 
-1) Create the following environment variables in your ~/.bashrc file:
 
-::
+1) Create the following environment variables in your ~/.bashrc file::
 
     export AWS_KEY="<your key>"
     export AWS_SECRET="<your secret>"
@@ -16,18 +15,17 @@ Using
     export PATH_TO_PRIVATE_KEY="<path to private key>"
     export PRIVATE_KEY_PASSWORD="<password for key>"
 
- 2) Set the following:
 
-::
+2) Set the following::
 
     export IMAGE_ID="ami-d0f89fb9"
     export IMAGE_NAME="Ubuntu Server 12.04.2 LTS AMI ID ami-d0f89fb9 (x86_64)"
 
- 3) Build the new image
 
-::
+3) Build the new image::
 
     docker run johncosta/docker-AMI /usr/local/bin/build-docker-ami $AWS_KEY $AWS_SECRET "$IMAGE_ID" "$IMAGE_NAME" "$PRIVATE_KEY_NAME" "$PATH_TO_PRIVATE_KEY" "$PRIVATE_KEY_PASSWORD"
+
 
 Additional things to consider:
 ------------------------------
