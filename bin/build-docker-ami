@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+import sys
+import requests
+
+from boto.ec2.connection import EC2Connection
+from docker_ami.utils import DockerVersionChecker
+
+from docker_ami.utils.aws import (
+    boot_image, stop_instance, terminate_instance, create_image)
+
+
+if __name__ == "__main__":
+
+    # all the fun parameters
+    AWS_KEY = sys.argv[1]
+    AWS_SECRET_KEY = sys.argv[2]
+    IMAGE_ID = sys.argv[3]   # ami-c30360aa
+    IMAGE_NAME = sys.argv[4]  # Ubuntu Cloud Guest AMI ID ami-c30360aa (x86_64)
+    EC2_PRIVATE_KEY_NAME = sys.argv[5]
+    PATH_TO_PRIVATE_KEY = sys.argv[6]
+    PRIVATE_KEY_PASSWORD = sys.argv[7]
+
+
+    # userdata used to get the correct version of docker and install it
+    response = requests.get("http://get.docker.io")
+    user_data = response.content
+
+    # connect to EC2
+    conn = EC2Connection(AWS_KEY, AWS_SECRET_KEY)
+    instance = boot_image(conn, IMAGE_ID, user_data, EC2_PRIVATE_KEY_NAME,
+                          IMAGE_NAME)
+
+    print "Instance is running, ip: %s" % instance.public_dns_name
+    print "Access the instance with: ssh -i ~/.ssh/aws.pem ubuntu@{0}".format(
+        instance.public_dns_name)
+
+    checker = DockerVersionChecker(instance.public_dns_name,
+                                   PATH_TO_PRIVATE_KEY,
+                                   PRIVATE_KEY_PASSWORD)
+    values = checker.get_docker_version()
+    print "Docker version information: {0}".format(values)
+
+    stop_instance(conn, instance, IMAGE_ID, IMAGE_NAME)
+
+    new_image_name = ' - '.join(["Docker Version (" + values['server_version'] + ")", IMAGE_NAME])
+    create_image(conn, instance, new_image_name, values)
+    terminate_instance(conn, instance, IMAGE_ID, IMAGE_NAME)
