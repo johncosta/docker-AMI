@@ -20,7 +20,6 @@ if __name__ == "__main__":
     PATH_TO_PRIVATE_KEY = sys.argv[6]
     PRIVATE_KEY_PASSWORD = sys.argv[7]
 
-
     # userdata used to get the correct version of docker and install it
     response = requests.get("http://get.docker.io")
     user_data = response.content
@@ -42,6 +41,7 @@ if __name__ == "__main__":
 
     stop_instance(conn, instance, IMAGE_ID, IMAGE_NAME)
 
-    new_image_name = ' - '.join(["Docker Version (" + values['server_version'] + ")", IMAGE_NAME])
+    new_image_name = (' - '.join(["Docker Version (" +
+                                  values['server_version'] + ")", IMAGE_NAME]))
     create_image(conn, instance, new_image_name, values)
     terminate_instance(conn, instance, IMAGE_ID, IMAGE_NAME)

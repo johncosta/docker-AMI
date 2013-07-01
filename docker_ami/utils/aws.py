@@ -27,7 +27,7 @@ def create_ssh_group(ec2_connection):
     return ssh_group
 
 
-def get_ec2_image(ec2_connection, image_id, my_image = None):
+def get_ec2_image(ec2_connection, image_id, my_image=None):
     """ Returns a ec2 image for the image_id requested.
 
     :params ec2_connection:
@@ -36,7 +36,7 @@ def get_ec2_image(ec2_connection, image_id, my_image = None):
     """
     # TODO use logger
     print "Getting image..."
-    images = ec2_connection.get_all_images(image_ids=[image_id,])
+    images = ec2_connection.get_all_images(image_ids=[image_id, ])
 
     for image in images:
         if image.id == image_id:
@@ -77,7 +77,7 @@ def boot_image(ec2_connection, image_id, user_data, private_key_name,
     image = get_ec2_image(ec2_connection, image_id)
     new_reservation = image.run(
         user_data=user_data, instance_type=DEFAULT_INSTANCE_SIZE,
-        security_group_ids=[ssh_group.id,],
+        security_group_ids=[ssh_group.id, ],
         key_name=private_key_name
     )
     instance = new_reservation.instances[0]

@@ -22,7 +22,7 @@ class DockerVersionChecker(object):
     """
     _user = DEFAULT_AWS_USER  # we're building aws images for now
     _max_ssh_wait = 60  # seconds
-    _max_docker_wait = 120 # seconds
+    _max_docker_wait = 120  # seconds
     _ssh_wait_increment = 2  # seconds
     _docker_wait_incrememnt = 10  # seconds
     _docker_version_command = 'docker version'
