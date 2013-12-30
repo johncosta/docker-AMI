@@ -25,7 +25,7 @@ class DockerVersionChecker(object):
     _max_docker_wait = 120  # seconds
     _ssh_wait_increment = 2  # seconds
     _docker_wait_incrememnt = 10  # seconds
-    _docker_version_command = 'docker version'
+    _docker_version_command = 'sudo docker version'
 
     def __init__(self, hostname, private_key_file, private_key_file_password):
         super(DockerVersionChecker, self).__init__()
