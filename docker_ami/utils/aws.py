@@ -1,7 +1,8 @@
-from boto.exception import EC2ResponseError
 import time
 import sys
+import boto
 
+from boto.exception import EC2ResponseError
 
 DEFAULT_INSTANCE_SIZE = 't1.micro'
 DEFAULT_AWS_USER = 'ubuntu'
@@ -69,16 +70,22 @@ def wait_until_instance_running(ec2_instance, image_id, image_name):
 
 # boot an instance
 def boot_image(ec2_connection, image_id, user_data, private_key_name,
-               image_name):
+               image_name, image_size):
     """
 
     """
+    dev_sda1 = boto.ec2.blockdevicemapping.EBSBlockDeviceType()
+    dev_sda1.size = image_size # size in Gigabytes
+    bdm = boto.ec2.blockdevicemapping.BlockDeviceMapping()
+    bdm['/dev/sda1'] = dev_sda1
+
     ssh_group = create_ssh_group(ec2_connection)
     image = get_ec2_image(ec2_connection, image_id)
     new_reservation = image.run(
         user_data=user_data, instance_type=DEFAULT_INSTANCE_SIZE,
         security_group_ids=[ssh_group.id, ],
-        key_name=private_key_name
+        key_name=private_key_name,
+        block_device_map=bdm
     )
     instance = new_reservation.instances[0]
     instance = wait_until_instance_running(instance, image_id, image_name)
