@@ -21,8 +21,8 @@ class DockerVersionChecker(object):
 
     """
     _user = DEFAULT_AWS_USER  # we're building aws images for now
-    _max_ssh_wait = 60  # seconds
-    _max_docker_wait = 120  # seconds
+    _max_ssh_wait = 120  # seconds
+    _max_docker_wait = 240  # seconds
     _ssh_wait_increment = 2  # seconds
     _docker_wait_incrememnt = 10  # seconds
     _docker_version_command = 'docker version'
@@ -119,7 +119,7 @@ class DockerVersionChecker(object):
         return values
 
     def get_docker_version(self, values=None):
-        """ SSH's into the host and retreives the version of docker installed
+        """ SSH's into the host and retrieves the version of docker installed
 
             ... Client version: 0.4.6
             ... Server version: 0.4.6

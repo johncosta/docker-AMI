@@ -20,11 +20,12 @@ Using
 
     export IMAGE_ID="ami-d0f89fb9"
     export IMAGE_NAME="Ubuntu Server 12.04.2 LTS AMI ID ami-d0f89fb9 (x86_64)"
+    export IMAGE_SIZE="25"
 
 
 3) Build the new image::
 
-    docker run johncosta/docker-AMI /usr/local/bin/build-docker-ami $AWS_KEY $AWS_SECRET "$IMAGE_ID" "$IMAGE_NAME" "$PRIVATE_KEY_NAME" "$PATH_TO_PRIVATE_KEY" "$PRIVATE_KEY_PASSWORD"
+    docker run johncosta/docker-AMI /usr/local/bin/build-docker-ami $AWS_KEY $AWS_SECRET "$IMAGE_ID" "$IMAGE_NAME" "$PRIVATE_KEY_NAME" "$PATH_TO_PRIVATE_KEY" "$PRIVATE_KEY_PASSWORD" $IMAGE_SIZE
 
 
 Additional things to consider:

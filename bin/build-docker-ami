@@ -19,6 +19,7 @@ if __name__ == "__main__":
     EC2_PRIVATE_KEY_NAME = sys.argv[5]
     PATH_TO_PRIVATE_KEY = sys.argv[6]
     PRIVATE_KEY_PASSWORD = sys.argv[7]
+    IMAGE_SIZE = sys.argv[8]    # 8 GB is the default, specify in GB
 
     # userdata used to get the correct version of docker and install it
     response = requests.get("http://get.docker.io")
@@ -27,7 +28,7 @@ if __name__ == "__main__":
     # connect to EC2
     conn = EC2Connection(AWS_KEY, AWS_SECRET_KEY)
     instance = boot_image(conn, IMAGE_ID, user_data, EC2_PRIVATE_KEY_NAME,
-                          IMAGE_NAME)
+                          IMAGE_NAME, IMAGE_SIZE)
 
     print "Instance is running, ip: %s" % instance.public_dns_name
     print "Access the instance with: ssh -i ~/.ssh/aws.pem ubuntu@{0}".format(
