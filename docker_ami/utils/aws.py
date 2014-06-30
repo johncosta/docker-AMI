@@ -4,7 +4,7 @@ import boto
 
 from boto.exception import EC2ResponseError
 
-DEFAULT_INSTANCE_SIZE = 't1.micro'
+DEFAULT_INSTANCE_SIZE = 'm1.medium'
 DEFAULT_AWS_USER = 'ubuntu'
 
 
