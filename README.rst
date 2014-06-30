@@ -26,7 +26,9 @@ Using
 3) Build the new image::
 
     python setup.py install
-    build-docker-ami $AWS_KEY $AWS_SECRET "$IMAGE_ID" "$IMAGE_NAME" "$PRIVATE_KEY_NAME" "$PATH_TO_PRIVATE_KEY" "$PRIVATE_KEY_PASSWORD" $IMAGE_SIZE
+    build-docker-ami $AWS_KEY $AWS_SECRET "$IMAGE_ID" "$IMAGE_NAME" \
+                     "$PRIVATE_KEY_NAME" "$PATH_TO_PRIVATE_KEY" \
+                     "$PRIVATE_KEY_PASSWORD" $IMAGE_SIZE
 
 
 Additional things to consider:
