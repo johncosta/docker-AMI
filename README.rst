@@ -7,7 +7,7 @@ Using
 -----
 
 
-1) Create the following environment variables in your ~/.bashrc file::
+1) Create the following environment variables in your ``~/.bashrc`` file::
 
     export AWS_KEY="<your key>"
     export AWS_SECRET="<your secret>"
@@ -25,7 +25,8 @@ Using
 
 3) Build the new image::
 
-    docker run johncosta/docker-AMI /usr/local/bin/build-docker-ami $AWS_KEY $AWS_SECRET "$IMAGE_ID" "$IMAGE_NAME" "$PRIVATE_KEY_NAME" "$PATH_TO_PRIVATE_KEY" "$PRIVATE_KEY_PASSWORD" $IMAGE_SIZE
+    python setup.py install
+    build-docker-ami $AWS_KEY $AWS_SECRET "$IMAGE_ID" "$IMAGE_NAME" "$PRIVATE_KEY_NAME" "$PATH_TO_PRIVATE_KEY" "$PRIVATE_KEY_PASSWORD" $IMAGE_SIZE
 
 
 Additional things to consider:
