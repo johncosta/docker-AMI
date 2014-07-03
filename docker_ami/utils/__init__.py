@@ -71,11 +71,11 @@ class DockerVersionChecker(object):
 
         return waited
 
-    def _wait_for_docker_version(self, client, max_wait, wait_increment):
+    def _wait_for_docker_version(self, max_wait, wait_increment, hostname,
+                                 username, pkey):
         """ Docker may not be immediately available. We wait for max_wait
         seconds before giving up and assuming it's not installed.
 
-        :param client:
         :param max_wait:
         :param wait_increment:
         """
@@ -83,6 +83,11 @@ class DockerVersionChecker(object):
         waited = 0
 
         while not_done and waited < max_wait:
+            # Get a new client (login again) to avoid
+            # https://github.com/dotcloud/docker/issues/5314
+            client, _ = self.get_ssh_client()
+            client.connect(hostname, username=username, pkey=pkey)
+
             stdin, stdout, stderr = client.exec_command(
                 self._docker_version_command)
             err = ''.join([line.replace('\n', ' ') for line in stderr])
@@ -118,6 +123,15 @@ class DockerVersionChecker(object):
 
         return values
 
+    def get_ssh_client(self):
+        pkey = paramiko.RSAKey.from_private_key_file(self._private_key_file,
+                                                     password=self._private_key_file_password)
+
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        return client, pkey
+
     def get_docker_version(self, values=None):
         """ SSH's into the host and retrieves the version of docker installed
 
@@ -126,22 +140,22 @@ class DockerVersionChecker(object):
             ... Git commit: 9fe8bfb
             ... Go version: go1.1.1
         """
-        pkey = paramiko.RSAKey.from_private_key_file(
-            self._private_key_file, password=self._private_key_file_password)
-
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client, pkey = self.get_ssh_client()
 
         try:
-            ssh_wait = self._wait_for_ssh_connection(
-                client, self._hostname, self._user, pkey, self._max_ssh_wait,
-                self._ssh_wait_increment)
+            ssh_wait = self._wait_for_ssh_connection(client, self._hostname,
+                                                     self._user, pkey,
+                                                     self._max_ssh_wait,
+                                                     self._ssh_wait_increment)
             # TODO improve message
             # TODO use a real logger
             print "Waited ({0}) for ssh to become available.".format(ssh_wait)
 
-            docker_wait, values = self._wait_for_docker_version(
-                client, self._max_docker_wait, self._docker_wait_incrememnt)
+            docker_wait, values = self._wait_for_docker_version(self._max_docker_wait,
+                                                                self._docker_wait_incrememnt,
+                                                                self._hostname,
+                                                                self._user,
+                                                                pkey)
             # TODO improve message
             # TODO use a real logger
             print "Waited ({0}) for docker information.".format(docker_wait)
